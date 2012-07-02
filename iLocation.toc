@@ -1,0 +1,32 @@
+## Interface: 50001
+## Title: i|cffffffaaLocation|r
+## Version: 1.0.3
+## Notes: The Location display for your broker bar!
+## Author: grdn
+## SavedVariables: iLocationDB
+
+# Libraries
+#@no-lib-strip@
+Libs\LibStub\Libstub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\libdatabroker-1-1\LibDataBroker-1.1.lua
+
+Libs\LibBabble-Zone-3.0\lib.xml
+Libs\LibTourist-3.0\lib.xml
+Libs\LibQTip-1.0\lib.xml
+
+Libs\AceGUI-3.0\AceGUI-3.0.xml
+Libs\AceAddon-3.0\AceAddon-3.0.xml
+Libs\AceConfig-3.0\AceConfig-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceLocale-3.0\AceLocale-3.0.xml
+Libs\AceTimer-3.0\AceTimer-3.0.xml
+#@end-no-lib-strip@
+
+# Locales
+Locales\Locales.xml
+
+# Main
+iLocation.lua
+Config.lua
