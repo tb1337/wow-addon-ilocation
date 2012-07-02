@@ -93,6 +93,7 @@ local function CreateConfig()
 					AlwaysLevelmode = {
 						type = "toggle",
 						name = L["Always enabled Levelmode"],
+						desc = "Recommended zones or instances are only shown when you are not at maximum level. If set to enabled, they are always shown.",
 						order = 5,
 						width = "full",
 						get = function()
@@ -104,31 +105,55 @@ local function CreateConfig()
 					},
 					header2 = {
 						type = "header",
-						name = "",
-						order = 6,
-					},
-					HidePvPZones = {
-						type = "toggle",
-						name = L["Hide Battlegrounds, Arenas and PvP-Zones"],
-						order = 8,
-						width = "full",
-						get = function()
-							return iLocation.db.HidePvPZones;
-						end,
-						set = function(info, value)
-							iLocation.db.HidePvPZones = value;
-						end,
+						name = _G.FILTERS,
+						order = 100,
 					},
 					HideRaids = {
 						type = "toggle",
-						name = L["Hide Raids"],
-						order = 7,
-						width = "full",
+						name = _G.RAIDS,
+						order = 110,
+						--width = "full",
 						get = function()
 							return iLocation.db.HideRaids;
 						end,
 						set = function(info, value)
 							iLocation.db.HideRaids = value;
+						end,
+					},
+					HideArenas = {
+						type = "toggle",
+						name = _G.ARENA,
+						order = 120,
+						--width = "full",
+						get = function()
+							return iLocation.db.HideArenas;
+						end,
+						set = function(info, value)
+							iLocation.db.HideArenas = value;
+						end,
+					},
+					HideBattlegrounds = {
+						type = "toggle",
+						name = _G.BATTLEGROUNDS,
+						order = 130,
+						--width = "full",
+						get = function()
+							return iLocation.db.HideBattlegrounds;
+						end,
+						set = function(info, value)
+							iLocation.db.HideBattlegrounds = value;
+						end,
+					},
+					HidePvPAreas = {
+						type = "toggle",
+						name = "World PvP Areas",
+						order = 140,
+						--width = "full",
+						get = function()
+							return iLocation.db.HidePvPAreas;
+						end,
+						set = function(info, value)
+							iLocation.db.HidePvPAreas = value;
 						end,
 					},
 				},
@@ -148,8 +173,10 @@ function iLocation:CreateDB()
 		ShowRecZones = true,
 		ZoneColor = 3,
 		AlwaysLevelmode = false,
-		HidePvPZones = false,
 		HideRaids = false,
+		HideArenas = true,
+		HideBattlegrounds = true,
+		HidePvPAreas = true,
 	}};
 end
 

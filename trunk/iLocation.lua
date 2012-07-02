@@ -158,8 +158,22 @@ do
 		isRaid = nil;
 		
 		-- check if it's PvP and filter it, if set in the options
-		if( LibTourist:IsPvPZone(zone) or LibTourist:IsArena(zone) or LibTourist:IsBattleground(zone) ) then
-			if( iLocation.db.HidePvPZones ) then
+		if( LibTourist:IsPvPZone(zone) ) then
+			if( iLocation.db.HidePvPAreas ) then
+				return;
+			end
+			isPvP = true;
+		end
+		
+		if( LibTourist:IsArena(zone) ) then
+			if( iLocation.db.HideArenas ) then
+				return;
+			end
+			isPvP = true;
+		end
+		
+		if( LibTourist:IsBattleground(zone) ) then
+			if( iLocation.db.HideBattlegrounds ) then
 				return;
 			end
 			isPvP = true;
