@@ -23,4 +23,5 @@ L["The number of decimal digits for coordinates."] = true
 L["Hide Raids"] = true
 L["Hide Dungeon Entrances"] = true
 L["Tooltip Options"] = true
+L["Addon update available!"] = true
 --@end-do-not-package@

@@ -330,4 +330,9 @@ function iLocation:UpdateTooltip(tip)
 		end
 	end
 	
+	if( LibStub("iLib"):IsUpdate(AddonName) ) then
+		tip:AddSeparator();
+		line = tip:AddLine("");
+		tip:SetCell(line, 1, "|cffff0000"..L["Addon update available!"].."|r", nil, "CENTER", 0);
+	end
 end
