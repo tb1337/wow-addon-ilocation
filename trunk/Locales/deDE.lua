@@ -6,6 +6,7 @@ if not L then return end
 --@localization(locale="deDE", format="lua_additive_table", handle-unlocalized="english", escape-non-ascii=true, same-key-is-true=true)@
 
 --@do-not-package@
+L["Addon update available!"] = "Addon Update verf\195\188gbar!"
 L["Always enabled Levelmode"] = "Levelmodus immer aktivieren"
 L["By Difficulty"] = "Schwierigkeit"
 L["By Hostility"] = "Feindlichkeit"
