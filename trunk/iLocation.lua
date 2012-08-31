@@ -84,6 +84,8 @@ function iLocation:Boot()
 	
 	self:EventHandler();
 	self:UpdateCoords();
+	
+	self:UnregisterEvent("PLAYER_ENTERING_WORLD");
 end
 iLocation:RegisterEvent("PLAYER_ENTERING_WORLD", "Boot");
 
