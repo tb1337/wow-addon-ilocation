@@ -29,6 +29,9 @@ local CurrentSubZone = "";
 local CurrentPosX = 0;
 local CurrentPosY = 0;
 
+local DisplayBPZones = nil;
+local recBPZones = {};
+
 local CoordsTimer;
 
 local COLOR_GOLD = "|cfffed100%s|r";
@@ -72,6 +75,11 @@ function iLocation:Boot()
 	self:RegisterEvent("ZONE_CHANGED", "EventHandler");
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "EventHandler");
 	
+	-- Pet Battles
+	self:RegisterEvent("MINIMAP_UPDATE_TRACKING", "UpdateMinimapTracking");
+	self:RegisterEvent("PET_BATTLE_LEVEL_CHANGED", "CalculateRecBPZones");
+	self:RegisterEvent("BATTLE_PET_CURSOR_CLEAR", "CalculateRecBPZones");
+	
 	self:SecureHook("MoveBackwardStart", "StartMoving");
 	self:SecureHook("MoveBackwardStop", "StopMoving");
 	self:SecureHook("MoveForwardStart", "StartMoving");
@@ -84,10 +92,87 @@ function iLocation:Boot()
 	
 	self:EventHandler();
 	self:UpdateCoords();
+	self:UpdateMinimapTracking();
 	
 	self:UnregisterEvent("PLAYER_ENTERING_WORLD");
 end
 iLocation:RegisterEvent("PLAYER_ENTERING_WORLD", "Boot");
+
+--------------------
+-- Battle Pet
+--------------------
+
+local function calculate_pet_levels()	
+	-- dirty hack, pet levels are always lower than player levels and we need a value which is higher than pet levels could be
+	-- to calculate the lowest level. Why not use MAX_PET_LEVEL? it is set local in Blizzard_PetJournal.lua -.-
+	local lowest, highest = _G.MAX_PLAYER_LEVEL, 0;
+	
+	local level;
+	local petID, _, slotLocked;
+	
+	for i = 1, 3 do
+		petID, _, _, _, slotLocked = _G.C_PetJournal.GetPetLoadOutInfo(i);
+		
+		if( not slotLocked and petID )then
+			level = select(3, _G.C_PetJournal.GetPetInfoByPetID( petID )) or 0;
+			
+			if( level < lowest ) then
+				lowest = level;
+			end
+			
+			if( level > highest ) then
+				highest = level;
+			end
+			
+		end
+	end
+	
+	return lowest, highest;
+end
+
+function iLocation:CalculateRecBPZones()
+	-- We require the PetJournal for many API functions
+	if( not _G.IsAddOnLoaded("Blizzard_PetJournal") ) then
+		_G.LoadAddOn("Blizzard_PetJournal");
+	end
+	
+	if( not DisplayBPZones ) then
+		return;
+	end
+	
+	_G.wipe(recBPZones);
+	
+	local petLowest, petHighest, petAvg = calculate_pet_levels();
+	
+	local low, high;
+	for zone in LibTourist:IterateZones() do
+		low, high = LibTourist:GetBattlePetLevel(zone);
+		if( low and not high ) then
+			high = low;
+		end
+		
+		if( low and ((petLowest - low) <= 1) and (high - petLowest <= 2) ) then
+			table.insert(recBPZones, zone);
+		end
+	end
+	
+	table.sort(recBPZones);
+end
+
+function iLocation:UpdateMinimapTracking()
+	local _, icon, active;
+	
+	for i = 1, _G.GetNumTrackingTypes() do
+		_, icon, active = _G.GetTrackingInfo(i);
+		
+		if( icon == "Interface\\Icons\\tracking_wildpet" ) then			
+			DisplayBPZones = active;			
+			self:CalculateRecBPZones();
+			
+			return;
+		end
+	end
+end
 
 ------------------------
 -- Moving Control
@@ -117,7 +202,7 @@ do
 		-- the more speed we have, the lesser is the result
 		-- this brings us as more coordinates updates as faster we are :)
 		speed = 1 / ((_G.IsFlying() and speedfly or speedwalk) / 7); -- since WoW speed is based on 7, we recalc it to base 10
-		ratio = 2 / (self.db.DecimalDigits + 1) * speed;
+		ratio = 2 / (self.db.DecimalDigits + 1) * speed; -- the faster we are, the lower is the update ratio
 		
 		CoordsTimer = self:ScheduleRepeatingTimer("UpdateCoords", ratio);
 	end
@@ -160,7 +245,9 @@ local function format_zone(zone, subzone)
 	if( not zone ) then
 		zone = CurrentZone;
 	end
-	subzone = subzone and CurrentSubZone == "" and false or subzone;
+	if( subzone and CurrentSubZone == "" ) then
+		subzone = nil;
+	end
 	
 	local r, g, b;
 		
@@ -226,7 +313,7 @@ local function get_pvp_status()
 	end
 end
 
-local function add_zone(tip, zone)
+local function add_zone(tip, zone, isPet)
 	local r, g, b, min, max;
 	local size, entrance, x, y = "", "", 0, 0;
 		
@@ -246,9 +333,21 @@ local function add_zone(tip, zone)
 		end
 		entrance, x, y = LibTourist:GetEntrancePortalLocation(zone);
 	end
+	
+	if( not isPet ) then
+		r, g, b = LibTourist:GetLevelColor(zone);
+		min, max = LibTourist:GetLevel(zone);
+	else
+		-- additional filter
+		-- no hostile faction citys please :)
+		if( LibTourist:IsCity(zone) and LibTourist:IsHostile(zone) ) then
+			return;
+		end
 		
-	r, g, b = LibTourist:GetLevelColor(zone);
-	min, max = LibTourist:GetLevel(zone);
+		local petLevel = calculate_pet_levels();
+		r, g, b = LibTourist:GetBattlePetLevelColor(zone, petLevel);
+		min, max = LibTourist:GetBattlePetLevel(zone);
+	end
 	
 	tip:AddLine(
 		zone, -- zone name
@@ -259,6 +358,7 @@ local function add_zone(tip, zone)
 	);
 end
 
+local _initial_pet_calc;
 function iLocation:UpdateTooltip(tip)
 	tip:Clear();
 	tip:SetColumnLayout(
@@ -300,6 +400,21 @@ function iLocation:UpdateTooltip(tip)
 	-- add continent
 	line = tip:AddLine((COLOR_GOLD):format(_G.CONTINENT..":"));
 	tip:SetCell(line, 2, LibTourist:GetContinent(CurrentZone), nil, "RIGHT", 0);
+	
+	-- add pet battle zones if needed
+	if( not _initial_pet_calc ) then
+		self:CalculateRecBPZones();
+		_initial_pet_calc = 1;
+	end
+	
+	if( DisplayBPZones ) then
+		tip:AddLine(" ");
+		tip:AddLine((COLOR_GOLD):format(L["Pet Battle Zones:"]));
+		
+		for _,zone in ipairs(recBPZones) do
+			add_zone(tip, zone, 1);
+		end
+	end
 	
 	-- add existing instances in a zone
 	if( self.db.ShowZoneInstances and LibTourist:DoesZoneHaveInstances(CurrentZone) ) then

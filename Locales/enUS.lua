@@ -13,6 +13,7 @@ L["Show recommended dungeons"] = true
 L["Show recommended zones"] = true
 L["Recommended Dungeons:"] = true
 L["Recommended Zones:"] = true
+L["Pet Battle Zones:"] = true
 L["Position:"] = true
 L["Sanctuary"] = true
 L["Contested"] = true
