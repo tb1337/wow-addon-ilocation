@@ -408,7 +408,7 @@ function iLocation:UpdateTooltip(tip)
 	end
 	
 	-- add battle pet level
-	line = tip:AddLine((COLOR_GOLD):format(L["Battle pets:"]));
+	line = tip:AddLine((COLOR_GOLD):format(L["Battle Pets:"]));
 	tip:SetCell(line, 2, LibTourist:GetBattlePetLevelString(CurrentZone), nil, "RIGHT", 0);
 	
 	-- add continent
