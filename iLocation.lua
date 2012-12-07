@@ -284,8 +284,13 @@ local function format_level(min, max, r, g, b)
 end
 
 function iLocation:UpdatePlugin()
-	local coords = format_coords();
-	self.ldb.text = format_zone()..(coords ~= "" and " " or "")..coords;
+	if( self.db.ShowCoordinates ) then
+		local coords = format_coords();
+		self.ldb.text = format_zone()..(coords ~= "" and " " or "")..coords;
+	else
+		self.ldb.text = format_zone();
+	end
+	
 	self:CheckTooltips("Main");
 end
 
@@ -366,6 +371,11 @@ function iLocation:UpdateTooltip(tip)
 		"LEFT", (self.db.HideRaids and "RIGHT" or "CENTER"), "CENTER", "LEFT", "RIGHT"
 	);
 	
+	if( LibStub("iLib"):IsUpdate(AddonName) ) then
+		line = tip:AddHeader("");
+		tip:SetCell(line, 1, "|cffff0000"..L["Addon update available!"].."|r", nil, "CENTER", 0);
+	end
+	
 	local r, g, b, line;
 	
 	-- add zone name
@@ -396,6 +406,10 @@ function iLocation:UpdateTooltip(tip)
 		line = tip:AddLine((COLOR_GOLD):format(_G.LEVEL..":"));
 		tip:SetCell(line, 2, format_level(min, max, r, g, b), nil, "RIGHT", 0);
 	end
+	
+	-- add battle pet level
+	line = tip:AddLine((COLOR_GOLD):format(L["Battle pets:"]));
+	tip:SetCell(line, 2, LibTourist:GetBattlePetLevelString(CurrentZone), nil, "RIGHT", 0);
 	
 	-- add continent
 	line = tip:AddLine((COLOR_GOLD):format(_G.CONTINENT..":"));
@@ -445,11 +459,5 @@ function iLocation:UpdateTooltip(tip)
 				add_zone(tip, zone);
 			end
 		end
-	end
-	
-	if( LibStub("iLib"):IsUpdate(AddonName) ) then
-		tip:AddSeparator();
-		line = tip:AddLine("");
-		tip:SetCell(line, 1, "|cffff0000"..L["Addon update available!"].."|r", nil, "CENTER", 0);
 	end
 end
