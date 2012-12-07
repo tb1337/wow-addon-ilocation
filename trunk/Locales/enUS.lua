@@ -15,6 +15,7 @@ L["Recommended Dungeons:"] = true
 L["Recommended Zones:"] = true
 L["Pet Battle Zones:"] = true
 L["Position:"] = true
+L["Battle Pets:"] = true
 L["Sanctuary"] = true
 L["Contested"] = true
 L["Always enabled Levelmode"] = true
@@ -25,4 +26,5 @@ L["Hide Raids"] = true
 L["Hide Dungeon Entrances"] = true
 L["Tooltip Options"] = true
 L["Addon update available!"] = true
+L["Display coordinates on the plugin"] = true
 --@end-do-not-package@

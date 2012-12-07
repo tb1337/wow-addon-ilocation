@@ -16,6 +16,7 @@ function iLocation:CreateDB()
 	iLocation.CreateDB = nil;
 	
 	return { profile = {
+		ShowCoordinates = true,
 		ShowZoneInstances = true,
 		ShowRecInstances = true,
 		ShowRecZones = true,
@@ -70,10 +71,11 @@ local function cfg()
 							[3] = L["By Hostility"],
 						},
 					},
-					Spacer = {
-						type = "description",
-						name = "",
+					ShowCoordinates = {
+						type = "toggle",
+						name = L["Display coordinates on the plugin"],
 						order = 10,
+						width = "full",
 					},
 				},
 			},
