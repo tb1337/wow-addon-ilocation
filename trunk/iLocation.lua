@@ -141,7 +141,7 @@ function iLocation:CalculateRecBPZones()
 	
 	local low, high;
 	for zone in LibTourist:IterateZones() do
-		low, high = LibTourist:GetBattlePdtLevel(zone);
+		low, high = LibTourist:GetBattlePetLevel(zone);
 		high = low and not high and low or high;
 		
 		if( low and ((petLowest - low) <= 2) and (high - petLowest <= 2) ) then
