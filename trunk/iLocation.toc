@@ -1,6 +1,6 @@
-## Interface: 50100
+## Interface: 50200
 ## Title: i|cffffffaaLocation|r
-## Version: 2.1.2
+## Version: 2.1.3
 ## Notes: The Location display for your broker bar!
 ## Author: grdn
 ## SavedVariables: iLocationDB

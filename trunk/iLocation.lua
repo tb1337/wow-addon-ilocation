@@ -46,8 +46,12 @@ iLocation.ldb = LibStub("LibDataBroker-1.1"):NewDataObject(AddonName, {
 });
 
 iLocation.ldb.OnClick = function(_, button)
-	if( button == "RightButton" and not _G.IsModifierKeyDown() ) then
-		iLocation:OpenOptions();
+	if( not _G.IsModifierKeyDown() ) then
+		if( button == "LeftButton" ) then
+			_G.ToggleFrame(_G.WorldMapFrame);
+		elseif( button == "RightButton" ) then
+			iLocation:OpenOptions();
+		end
 	end
 end
 
