@@ -56,6 +56,7 @@ iLocation.ldb.OnClick = function(_, button)
 end
 
 iLocation.ldb.OnEnter = function(anchor)
+	print("lol")
 	if( iLocation:IsTooltip("Main") ) then
 		return;
 	end
