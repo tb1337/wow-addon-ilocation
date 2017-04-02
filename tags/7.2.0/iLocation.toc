@@ -1,0 +1,31 @@
+## Interface: 70200
+## Title: i|cffffffaaLocation|r
+## Version: 7.2.0
+## Notes: The Location display for your broker bar!
+## Author: grdn
+## SavedVariables: iLocationDB
+## Dependencies: Blizzard_Collections
+## OptionalDeps: Ace3, iLib, LibTourist-3.0
+
+# Libraries
+Libs\LibStub\Libstub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\libdatabroker-1-1\LibDataBroker-1.1.lua
+
+Libs\iLib\lib.xml
+Libs\LibTourist-3.0\lib.xml
+
+Libs\AceGUI-3.0\AceGUI-3.0.xml
+Libs\AceConfig-3.0\AceConfig-3.0.xml
+Libs\AceDB-3.0\AceDB-3.0.xml
+Libs\AceEvent-3.0\AceEvent-3.0.xml
+Libs\AceHook-3.0\AceHook-3.0.xml
+Libs\AceLocale-3.0\AceLocale-3.0.xml
+Libs\AceTimer-3.0\AceTimer-3.0.xml
+
+# Locales
+Locales\Locales.xml
+
+# Main
+iLocation.lua
+Config.lua
