@@ -264,10 +264,10 @@ end
 
 local function format_coords(x, y)
 	if( not x ) then
-		x = CurrentPosX *100;
+		x = (CurrentPosX or 0) *100;
 	end
 	if( not y ) then
-		y = CurrentPosY *100;
+		y = (CurrentPosY or 0) *100;
 	end
 	
 	if( (x + y) == 0 ) then
