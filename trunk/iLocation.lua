@@ -217,7 +217,9 @@ function iLocation:StopMoving()
 end
 
 function iLocation:UpdateCoords()
-	CurrentPosX, CurrentPosY = _G.GetPlayerMapPosition("player");
+	local map = _G.C_Map.GetPlayerMapPosition(_G.C_Map.GetBestMapForUnit("player"), "player");
+	CurrentPosX, CurrentPosY = map and map.x or nil, map and map.y or nil;
+	--CurrentPosX, CurrentPosY = _G.GetPlayerMapPosition("player");
 	iLocation:UpdatePlugin();
 end
 
