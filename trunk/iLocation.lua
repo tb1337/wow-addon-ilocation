@@ -162,7 +162,7 @@ function iLocation:UpdateMinimapTracking()
 	for i = 1, _G.GetNumTrackingTypes() do
 		_, icon, active = _G.GetTrackingInfo(i);
 		
-		if( icon == "Interface\\Icons\\tracking_wildpet" ) then			
+		if( icon == 613074 ) then			
 			DisplayBPZones = active;			
 			self:CalculateRecBPZones();
 			
@@ -240,27 +240,30 @@ end
 -- Update Plugin
 -----------------------
 
-local function format_zone(zone, subzone)
+local function format_zone(zone, subzone, hideZone)
 	if( not zone ) then
 		zone = CurrentZone;
 	end
-	if( subzone and CurrentSubZone == "" ) then
+	if( subzone and (CurrentSubZone == "" or CurrentZone == CurrentSubZone) ) then
 		subzone = nil;
 	end
+	
+	local text = (not hideZone and zone or "")..(subzone and not hideZone and ": " or "")..(subzone and CurrentSubZone or "");
+	text = text == "" and zone or text;
 	
 	local r, g, b;
 		
 	-- encolor by difficulty
 	if( iLocation.db.ZoneColor == 2 ) then
 		r, g, b = LibTourist:GetLevelColor(zone);
-		return ("|cff%02x%02x%02x%s|r"):format(r *255, g *255, b *255, zone..(subzone and ": "..CurrentSubZone or ""));
+		return ("|cff%02x%02x%02x%s|r"):format(r *255, g *255, b *255, text);
 	-- encolor by faction
 	elseif( iLocation.db.ZoneColor == 3 ) then
 		r, g, b = LibTourist:GetFactionColor(zone);
-		return ("|cff%02x%02x%02x%s|r"):format(r *255, g *255, b *255, zone..(subzone and ": "..CurrentSubZone or ""));
+		return ("|cff%02x%02x%02x%s|r"):format(r *255, g *255, b *255, text);
 	-- encolor gold
 	else
-		return (COLOR_GOLD):format(zone..(subzone and ": "..CurrentSubZone or ""));
+		return (COLOR_GOLD):format(text);
 	end
 end
 
@@ -283,11 +286,11 @@ local function format_level(min, max, r, g, b)
 end
 
 function iLocation:UpdatePlugin()
+	self.ldb.text = format_zone(nil, self.db.ZoneText > 1 and "" or nil, self.db.ZoneText == 2 or nil);
+	
 	if( self.db.ShowCoordinates ) then
 		local coords = format_coords();
-		self.ldb.text = format_zone()..(coords ~= "" and " " or "")..coords;
-	else
-		self.ldb.text = format_zone();
+		self.ldb.text = self.ldb.text ..(coords ~= "" and " " or "")..coords;
 	end
 	
 	self:CheckTooltips("Main");

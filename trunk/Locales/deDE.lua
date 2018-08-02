@@ -29,4 +29,8 @@ L["Show recommended dungeons"] = "Zeige empfohlene Dungeons"
 L["Show recommended zones"] = "Zeige empfohlene Gebiete"
 L["The number of decimal digits for coordinates."] = "Die Anzahl der Nachkommastellen."
 L["Tooltip Options"] = "Tooltip Optionen"
+L["Only Zone"] = "Nur Gebiet"
+L["Only Subzone"] = "Nur Teilgebiet"
+L["Both"] = "Beides"
+L["Plugin Display"] = "Anzeige auf Plugin"
 --@end-do-not-package@
