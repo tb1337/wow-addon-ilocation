@@ -8,7 +8,6 @@
 <Script file="Libs\LibStub\Libstub.lua"/>
 
 <Include file="Libs\iLib\lib.xml"/>
-<Include file="Libs\LibTourist-3.0\lib.xml"/>
 
 <Include file="Libs\AceHook-3.0\AceHook-3.0.xml"/>
 <Include file="Libs\AceGUI-3.0\AceGUI-3.0.xml"/>
@@ -17,6 +16,9 @@
 <Include file="Libs\AceEvent-3.0\AceEvent-3.0.xml"/>
 <Include file="Libs\AceLocale-3.0\AceLocale-3.0.xml"/>
 <Include file="Libs\AceTimer-3.0\AceTimer-3.0.xml"/>
+
+<Script file="Libs\HereBeDragons\HereBeDragons-2.0.lua"/>
+<Script file="Libs\LibTourist-3.0\LibTourist-3.0.lua"/>
 @end-non-debug@-->
 
 
