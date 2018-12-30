@@ -1,6 +1,6 @@
-## Interface: 80000
+## Interface: 80100
 ## Title: i|cffffffaaLocation|r
-## Version: 8.0.7
+## Version: 8.1.0
 ## Notes: The Location display for your broker bar!
 ## Author: grdn
 ## SavedVariables: iLocationDB
