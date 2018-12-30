@@ -287,10 +287,26 @@ end
 
 function iLocation:UpdatePlugin()
 	self.ldb.text = format_zone(nil, self.db.ZoneText > 1 and "" or nil, self.db.ZoneText == 2 or nil);
+
+	if( self.db.ShowCoordinates and self.db.ZoneText == 4 ) then
+		self.ldb.text = "";
+	end
 	
 	if( self.db.ShowCoordinates ) then
 		local coords = format_coords();
-		self.ldb.text = self.ldb.text ..(coords ~= "" and " " or "")..coords;
+		local open, close = "", "";
+
+		if( self.db.SurroundCoordinates == 2 ) then
+			open, close = "(", ")";
+		elseif( self.db.SurroundCoordinates == 3 ) then
+			open, close = "[", "]";
+		elseif( self.db.SurroundCoordinates == 4 ) then
+			open, close = "{", "}";
+		elseif( self.db.SurroundCoordinates == 5 ) then
+			open, close = "<", ">";
+		end
+
+		self.ldb.text = self.ldb.text ..(coords ~= "" and " " or "")..open..coords..close;
 	end
 	
 	self:CheckTooltips("Main");

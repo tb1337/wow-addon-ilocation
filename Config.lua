@@ -17,6 +17,7 @@ function iLocation:CreateDB()
 	
 	return { profile = {
 		ShowCoordinates = true,
+		SurroundCoordinates = 1,
 		ShowZoneInstances = true,
 		ShowRecInstances = true,
 		ShowRecZones = true,
@@ -72,20 +73,45 @@ local function cfg()
 							[3] = L["By Hostility"],
 						},
 					},
+					Spacer1 = {
+						type = "description",
+						name = " ",
+						fontSize = "small",
+						order = 10,
+					},
 					ShowCoordinates = {
 						type = "toggle",
 						name = L["Display coordinates on the plugin"],
-						order = 10,
-						width = "full",
+						order = 15,
+						width = "double"
+					},
+					SurroundCoordinates = {
+						type = "select",
+						name = L["Surround coordinates"],
+						order = 20,
+						values = {
+							[1] = _G.NO,
+							[2] = "( )",
+							[3] = "[ ]",
+							[4] = "{ }",
+							[5] = "< >",
+						},
+					},
+					Spacer2 = {
+						type = "description",
+						name = " ",
+						fontSize = "small",
+						order = 25,
 					},
 					ZoneText = {
 						type = "select",
 						name = L["Plugin Display"],
-						order = 15,
+						order = 25,
 						values = {
 							[1] = L["Only Zone"],
 							[2] = L["Only Subzone"],
 							[3] = L["Both"],
+							[4] = _G.NONE,
 						},
 					},
 				},

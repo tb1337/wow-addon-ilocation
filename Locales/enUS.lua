@@ -31,4 +31,5 @@ L["Only Zone"] = true
 L["Only Subzone"] = true
 L["Both"] = true
 L["Plugin Display"] = true
+L["Surround coordinates"] = true
 --@end-do-not-package@

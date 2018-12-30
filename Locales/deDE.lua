@@ -33,4 +33,5 @@ L["Only Zone"] = "Nur Gebiet"
 L["Only Subzone"] = "Nur Teilgebiet"
 L["Both"] = "Beides"
 L["Plugin Display"] = "Anzeige auf Plugin"
+L["Surround coordinates"] = "Koordinaten umranden"
 --@end-do-not-package@
