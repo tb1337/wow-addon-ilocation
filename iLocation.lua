@@ -9,7 +9,7 @@ LibStub("AceHook-3.0"):Embed(iLocation);
 
 local L = LibStub("AceLocale-3.0"):GetLocale(AddonName);
 
-local LibTourist = LibStub("LibTourist-3.0");
+local LibTourist = LibStub("LibTouristClassic-1.0");
 
 local _G = _G;
 local format = _G.string.format; -- iLocation heavyly uses format!
@@ -79,10 +79,11 @@ function iLocation:Boot()
 	self:RegisterEvent("ZONE_CHANGED", "EventHandler");
 	self:RegisterEvent("ZONE_CHANGED_NEW_AREA", "EventHandler");
 	
+	-- TODO
 	-- Pet Battles
-	self:RegisterEvent("MINIMAP_UPDATE_TRACKING", "UpdateMinimapTracking");
-	self:RegisterEvent("PET_BATTLE_LEVEL_CHANGED", "CalculateRecBPZones");
-	self:RegisterEvent("BATTLE_PET_CURSOR_CLEAR", "CalculateRecBPZones");
+	--self:RegisterEvent("MINIMAP_UPDATE_TRACKING", "UpdateMinimapTracking");
+	--self:RegisterEvent("PET_BATTLE_LEVEL_CHANGED", "CalculateRecBPZones");
+	--self:RegisterEvent("BATTLE_PET_CURSOR_CLEAR", "CalculateRecBPZones");
 	
 	self:SecureHook("MoveBackwardStart", "StartMoving");
 	self:SecureHook("MoveBackwardStop", "StopMoving");
@@ -96,7 +97,7 @@ function iLocation:Boot()
 	
 	self:EventHandler();
 	self:UpdateCoords();
-	self:UpdateMinimapTracking();
+	--self:UpdateMinimapTracking();
 	
 	self:UnregisterEvent("PLAYER_ENTERING_WORLD");
 end
@@ -134,42 +135,42 @@ local function calculate_pet_levels()
 	return lowest, highest;
 end
 
-function iLocation:CalculateRecBPZones()
-	if( not DisplayBPZones ) then
-		return;
-	end
+-- function iLocation:CalculateRecBPZones()
+-- 	if( not DisplayBPZones ) then
+-- 		return;
+-- 	end
 	
-	_G.wipe(recBPZones);
+-- 	_G.wipe(recBPZones);
 	
-	local petLowest, petHighest, petAvg = calculate_pet_levels();
+-- 	local petLowest, petHighest, petAvg = calculate_pet_levels();
 	
-	local low, high;
-	for zone in LibTourist:IterateZones() do
-		low, high = LibTourist:GetBattlePetLevel(zone);
-		high = low and not high and low or high;
+-- 	local low, high;
+-- 	for zone in LibTourist:IterateZones() do
+-- 		low, high = LibTourist:GetBattlePetLevel(zone);
+-- 		high = low and not high and low or high;
 		
-		if( low and ((petLowest - low) <= 2) and (high - petLowest <= 2) ) then
-			table.insert(recBPZones, zone);
-		end
-	end
+-- 		if( low and ((petLowest - low) <= 2) and (high - petLowest <= 2) ) then
+-- 			table.insert(recBPZones, zone);
+-- 		end
+-- 	end
 	
-	table.sort(recBPZones);
-end
+-- 	table.sort(recBPZones);
+-- end
 
-function iLocation:UpdateMinimapTracking()
-	local _, icon, active;
+-- function iLocation:UpdateMinimapTracking()
+-- 	local _, icon, active;
 	
-	for i = 1, _G.GetNumTrackingTypes() do
-		_, icon, active = _G.GetTrackingInfo(i);
+-- 	for i = 1, _G.GetNumTrackingTypes() do
+-- 		_, icon, active = _G.GetTrackingInfo(i);
 		
-		if( icon == 613074 ) then			
-			DisplayBPZones = active;			
-			self:CalculateRecBPZones();
+-- 		if( icon == 613074 ) then			
+-- 			DisplayBPZones = active;			
+-- 			self:CalculateRecBPZones();
 			
-			return;
-		end
-	end
-end
+-- 			return;
+-- 		end
+-- 	end
+-- end
 
 ------------------------
 -- Moving Control
@@ -198,7 +199,9 @@ do
 		speed, speedwalk, speedfly = _G.GetUnitSpeed("player"); -- we determine our normal and flying speed
 		-- the more speed we have, the lesser is the result
 		-- this brings us as more coordinates updates as faster we are :)
-		speed = 1 / ((_G.IsFlying() and speedfly or speedwalk) / 7); -- since WoW speed is based on 7, we recalc it to base 10
+		-- TODO
+		--speed = 1 / ((_G.IsFlying() and speedfly or speedwalk) / 7); -- since WoW speed is based on 7, we recalc it to base 10
+		speed = 1 / (speedwalk / 7); -- since WoW speed is based on 7, we recalc it to base 10
 		ratio = 2 / (self.db.DecimalDigits + 1) * speed; -- the faster we are, the lower is the update ratio
 		
 		CoordsTimer = self:ScheduleRepeatingTimer("UpdateCoords", ratio);
@@ -340,7 +343,7 @@ local function add_zone(tip, zone, isPet)
 	local r, g, b, min, max;
 	local size, entrance, x, y = "", "", 0, 0;
 		
-	if( LibTourist:IsArena(zone) or LibTourist:IsBattleground(zone) or LibTourist:IsPvPZone(zone) ) then
+	if( LibTourist:IsBattleground(zone) or LibTourist:IsPvPZone(zone) ) then
 		return;
 	end
 		
@@ -377,7 +380,7 @@ local function add_zone(tip, zone, isPet)
 		format_level(min, max, r, g, b), -- level req
 		(iLocation.db.HideRaids and nil or size),
 		(iLocation.db.HideEntrances and nil or format_zone(entrance or "")),
-		(iLocation.db.HideEntrances and nil or format_coords(x or 0, y or 0))
+		(iLocation.db.HideEntrances and nil or format_coords(x and x*100 or 0, y and y*100 or 0))
 	);
 end
 
@@ -426,27 +429,28 @@ function iLocation:UpdateTooltip(tip)
 	end
 	
 	-- add battle pet level
-	line = tip:AddLine((COLOR_GOLD):format(L["Battle Pets:"]));
-	tip:SetCell(line, 2, LibTourist:GetBattlePetLevelString(CurrentZone), nil, "RIGHT", 0);
+	--line = tip:AddLine((COLOR_GOLD):format(L["Battle Pets:"]));
+	--tip:SetCell(line, 2, LibTourist:GetBattlePetLevelString(CurrentZone), nil, "RIGHT", 0);
 	
 	-- add continent
 	line = tip:AddLine((COLOR_GOLD):format(_G.CONTINENT..":"));
 	tip:SetCell(line, 2, LibTourist:GetContinent(CurrentZone), nil, "RIGHT", 0);
 	
+	-- TODO
 	-- add pet battle zones if needed
-	if( not _initial_pet_calc ) then
-		self:CalculateRecBPZones();
-		_initial_pet_calc = 1;
-	end
+	-- if( not _initial_pet_calc ) then
+	-- 	self:CalculateRecBPZones();
+	-- 	_initial_pet_calc = 1;
+	-- end
 	
-	if( DisplayBPZones ) then
-		tip:AddLine(" ");
-		tip:AddLine((COLOR_GOLD):format(L["Pet Battle Zones:"]));
+	-- if( DisplayBPZones ) then
+	-- 	tip:AddLine(" ");
+	-- 	tip:AddLine((COLOR_GOLD):format(L["Pet Battle Zones:"]));
 		
-		for _,zone in ipairs(recBPZones) do
-			add_zone(tip, zone, 1);
-		end
-	end
+	-- 	for _,zone in ipairs(recBPZones) do
+	-- 		add_zone(tip, zone, 1);
+	-- 	end
+	-- end
 	
 	-- add existing instances in a zone
 	if( self.db.ShowZoneInstances and LibTourist:DoesZoneHaveInstances(CurrentZone) ) then
@@ -474,7 +478,9 @@ function iLocation:UpdateTooltip(tip)
 			tip:AddLine((COLOR_GOLD):format(L["Recommended Dungeons:"]));
 			
 			for zone in LibTourist:IterateRecommendedInstances() do
-				add_zone(tip, zone);
+				if( LibTourist:IsInstance(zone) ) then
+					add_zone(tip, zone);
+				end
 			end
 		end
 	end
