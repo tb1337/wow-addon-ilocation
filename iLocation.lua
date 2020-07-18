@@ -220,7 +220,13 @@ function iLocation:StopMoving()
 end
 
 function iLocation:UpdateCoords()
-	local map = _G.C_Map.GetPlayerMapPosition(_G.C_Map.GetBestMapForUnit("player"), "player");
+	local best = _G.C_Map.GetBestMapForUnit("player");
+	local map;
+
+	if( best ) then
+		map = _G.C_Map.GetPlayerMapPosition(best, "player");
+	end
+
 	CurrentPosX, CurrentPosY = map and map.x or nil, map and map.y or nil;
 	--CurrentPosX, CurrentPosY = _G.GetPlayerMapPosition("player");
 	iLocation:UpdatePlugin();
